@@ -8,7 +8,7 @@
 <style>
 body {
   font-family: 'Segoe UI', sans-serif;
-  background: #f6f1f4;
+  background: #f7f3f6;
   margin: 0;
   padding: 20px;
   color: #333;
@@ -16,40 +16,54 @@ body {
 
 h1 {
   text-align: center;
+  margin-bottom: 5px;
+}
+
+p {
+  text-align: center;
+  font-size: 0.95rem;
 }
 
 .container {
-  max-width: 800px;
+  max-width: 820px;
   margin: auto;
 }
 
 .card {
   background: white;
-  border-radius: 14px;
-  padding: 20px;
-  margin-bottom: 15px;
+  border-radius: 16px;
+  padding: 22px;
+  margin-bottom: 16px;
   cursor: pointer;
   transition: 0.3s;
   border: 2px solid transparent;
 }
 
 .card:hover {
-  border-color: #d8a1b8;
+  border-color: #d6a5bc;
 }
 
 .card.selected {
-  border-color: #b55c87;
-  background: #fff7fb;
+  border-color: #b35c86;
+  background: #fff6fb;
+}
+
+.checkbox {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 0.95rem;
 }
 
 button {
-  background: #b55c87;
+  background: #b35c86;
   color: white;
   border: none;
-  padding: 12px 18px;
-  border-radius: 10px;
+  padding: 14px 20px;
+  border-radius: 12px;
   cursor: pointer;
-  margin-top: 15px;
+  margin-top: 18px;
+  width: 100%;
+  font-size: 1rem;
 }
 
 button.secondary {
@@ -60,30 +74,41 @@ button.secondary {
   display: none;
 }
 
-.checkbox {
-  margin-top: 10px;
+#confirmArea, #finalMessage {
+  margin-top: 25px;
+  text-align: center;
 }
 
 .modal {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.4);
+  background: rgba(0,0,0,0.45);
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 999;
 }
 
 .modal-content {
   background: white;
   padding: 25px;
-  border-radius: 14px;
+  border-radius: 18px;
   width: 90%;
-  max-width: 400px;
+  max-width: 420px;
 }
 
 label {
   display: block;
-  margin-top: 10px;
+  margin-top: 12px;
+  font-size: 0.9rem;
+}
+
+input, select {
+  width: 100%;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  margin-top: 5px;
 }
 </style>
 </head>
@@ -92,31 +117,38 @@ label {
 <div class="container">
 
 <h1>Choose Our Valentine 💘</h1>
-<p style="text-align:center">
-By entering you accept the terms & conditions of going on a date with me 😌
+<p>
+Al entrar aceptas los términos y condiciones de salir a una cita conmigo 😌  
+(esta opción no es negociable)
 </p>
 
 <div id="options">
-  <div class="card" onclick="selectOption('art')">
-    🎨 Manualidad juntos
+
+  <div class="card" onclick="selectOption('art', this)">
+    🎨 <b>Manualidad juntos</b><br>
+    Ir a Fantasías Miguel y escoger una manualidad para hacer los dos.
   </div>
 
-  <div class="card" onclick="selectOption('cook')">
-    🍝 Cocinar algo que el otro AME
+  <div class="card" onclick="selectOption('cook', this)">
+    🍝 <b>Cocinar algo que el otro AME</b><br>
+    Cada quien elige un platillo que ama y quiere que el otro pruebe.
   </div>
 
-  <div class="card" onclick="selectOption('firsts')">
-    ✨ Primeras veces juntos
+  <div class="card" onclick="selectOption('firsts', this)">
+    ✨ <b>Primeras veces juntos</b><br>
+    Lista de cosas que queremos hacer por primera vez como pareja.
   </div>
 
-  <div class="card" onclick="selectOption('country')">
-    🌍 Cena de un país (vestimenta incluida)
+  <div class="card" onclick="selectOption('country', this)">
+    🌍 <b>Cena de un país</b><br>
+    Comida, vestimenta y música del país elegido.
   </div>
 
   <div class="checkbox">
-    <input type="checkbox" id="eatOut" onchange="openEatOut()">
-    Prefiero salir a comer (sorpresa por ti, cero resentimientos)
+    <input type="checkbox" id="eatOut">
+    Prefiero salir a comer (el lugar lo escoges tú, cero resentimientos)
   </div>
+
 </div>
 
 <div id="confirmArea" class="hidden">
@@ -142,13 +174,13 @@ By entering you accept the terms & conditions of going on a date with me 😌
     <label>Tipo de comida</label>
     <input id="foodType" placeholder="Ej. Italiana">
 
-    <label>Prioridad</label>
+    <label>¿Qué prefieres?</label>
     <select id="priority">
       <option>Lugar bonito</option>
       <option>Comida rica</option>
     </select>
 
-    <label>Arreglarse o casual</label>
+    <label>¿Cómo vamos?</label>
     <select id="dress">
       <option>Arreglarse</option>
       <option>Casual</option>
@@ -165,21 +197,32 @@ By entering you accept the terms & conditions of going on a date with me 😌
 </div>
 
 <script>
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("eatOut").checked = false;
+  document.getElementById("eatOutModal").classList.add("hidden");
+});
+
 let selectedOption = null;
 
-function selectOption(option){
-  document.querySelectorAll('.card').forEach(c => c.classList.remove('selected'));
-  event.currentTarget.classList.add('selected');
-  selectedOption = option;
-
-  localStorage.setItem("selectedDateOption", option);
-  document.getElementById("confirmArea").classList.remove("hidden");
-}
-
-function openEatOut(){
-  if(document.getElementById("eatOut").checked){
-    document.getElementById("eatOutModal").classList.remove("hidden");
+document.getElementById("eatOut").addEventListener("change", () => {
+  const modal = document.getElementById("eatOutModal");
+  if (eatOut.checked) {
+    modal.classList.remove("hidden");
+    selectedOption = "dinner-out";
+    localStorage.setItem("selectedDateOption", "dinner-out");
+  } else {
+    modal.classList.add("hidden");
   }
+});
+
+function selectOption(option, element){
+  document.querySelectorAll('.card').forEach(c => c.classList.remove('selected'));
+  element.classList.add('selected');
+
+  selectedOption = option;
+  localStorage.setItem("selectedDateOption", option);
+
+  document.getElementById("confirmArea").classList.remove("hidden");
 }
 
 function saveEatOut(){
@@ -190,15 +233,17 @@ function saveEatOut(){
     time: time.value
   };
 
-  localStorage.setItem("selectedDateOption", "dinner-out");
   localStorage.setItem("dateDetails", JSON.stringify(details));
 
   document.getElementById("eatOutModal").classList.add("hidden");
+  document.getElementById("eatOut").checked = false;
+
   document.getElementById("confirmArea").classList.remove("hidden");
 }
 
 function confirmSelection(){
   localStorage.setItem("confirmed", "true");
+
   document.getElementById("options").classList.add("hidden");
   document.getElementById("confirmArea").classList.add("hidden");
   document.getElementById("finalMessage").classList.remove("hidden");
@@ -207,3 +252,4 @@ function confirmSelection(){
 
 </body>
 </html>
+
