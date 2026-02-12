@@ -1,42 +1,3 @@
-Excelente que lo probaste otra vez — aquí sí hay un bug claro de lógica/UI, y ya vi exactamente por qué nunca se quita el popup, aunque la contraseña sea correcta.
-
-Voy por partes y luego te dejo EL ARCHIVO COMPLETO CORREGIDO (este sí funciona).
-
-🧠 CAUSA REAL DEL BUG (importante)
-
-El problema NO está en la contraseña.
-Está en esto:
-
-<div id="enterModal" class="modal">
-
-Qué pasa:
-
-.modal por CSS es display:flex
-
-Nunca inicia con .hidden
-
-Aunque el JS intente ocultarlo, el navegador lo pinta primero
-
-Resultado: el modal siempre queda visible
-
-👉 Solución correcta:
-El modal de acceso DEBE iniciar oculto y solo mostrarse si no hay acceso.
-
-✅ SOLUCIÓN DEFINITIVA (probada)
-✔️ Cambios clave
-
-enterModal empieza con hidden
-
-JS decide cuándo mostrarlo
-
-No hay loops ni race conditions
-
-Funciona en desktop y móvil
-
-📄 ARCHIVO index.html — VERSIÓN FINAL CORREGIDA
-
-👉 Copia TODO y reemplaza el anterior
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -368,4 +329,5 @@ function resetChoice(){
 
 </body>
 </html>
+
 
