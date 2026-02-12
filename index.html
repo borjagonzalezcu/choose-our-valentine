@@ -88,11 +88,30 @@ input, select {
   border: 1px solid #ccc;
   margin-top: 5px;
 }
+
+.password-box {
+  max-width: 360px;
+  margin: 80px auto;
+  background: white;
+  padding: 30px;
+  border-radius: 18px;
+  text-align: center;
+}
 </style>
 </head>
 
 <body>
-<div class="container">
+
+<!-- PASSWORD GATE -->
+<div id="loginView" class="password-box">
+  <h2>🔒 Acceso restringido</h2>
+  <p>Ingresa la contraseña para continuar</p>
+  <input type="password" id="accessInput" placeholder="Contraseña">
+  <button onclick="checkAccess()">Entrar</button>
+  <p id="loginError" style="color:#b35c86;"></p>
+</div>
+
+<div class="container hidden" id="app">
 
 <h1>Choose Our Valentine 💘</h1>
 <p>Al entrar aceptas los términos y condiciones de salir a una cita conmigo 😌</p>
@@ -129,8 +148,7 @@ input, select {
     <h2 id="detailTitle"></h2>
     <p id="detailText"></p>
 
-    <!-- OPCIÓN SALIR A COMER -->
-    <div id="eatOutSection" class="hidden">
+    <div id="eatOutSection">
       <label>
         <input type="checkbox" id="eatOutCheck">
         Prefiero salir a comer (sorpresa por ti, cero resentimientos)
@@ -161,7 +179,9 @@ input, select {
     </div>
 
     <button onclick="confirmSelection()">Confirmar selección ❤️</button>
-    <button class="secondary" onclick="goBack()">Volver</button>
+    <button class="secondary" onclick="requestChange()">
+      Cambiar selección (tendrá un costo extra 😉)
+    </button>
 
   </div>
 </div>
@@ -178,44 +198,53 @@ input, select {
 </div>
 
 <script>
+const ACCESS_PASSWORD = "valentine2024";
+const CHANGE_PASSWORD = "besos";
+
 let currentOption = null;
 
 const details = {
   art: {
     title: "🎨 Manualidad juntos",
-    text: "Ir a Fantasías Miguel y escoger una manualidad para hacer los dos: pintar, cerámica o algo random."
+    text: "Ir a Fantasías Miguel y escoger una manualidad para hacer los dos."
   },
   cook: {
     title: "🍝 Cocinar algo que el otro AME",
-    text: "Cada uno elige un platillo que ama y quiere que el otro pruebe. Aquí se prueba sí o sí."
+    text: "Cada uno elige un platillo que ama y quiere que el otro pruebe."
   },
   firsts: {
     title: "✨ Primeras veces juntos",
-    text: "Una lista de cosas que queremos hacer por primera vez como pareja, hoy y en el futuro."
+    text: "Lista de cosas que queremos hacer por primera vez como pareja."
   },
   country: {
     title: "🌍 Cena de un país",
-    text: "Elegimos un país y todo gira alrededor de eso: comida, música y vestimenta."
+    text: "Comida, vestimenta y música del país elegido."
   }
 };
 
-function openDetails(option) {
-  currentOption = option;
-
-  document.getElementById("mainView").classList.add("hidden");
-  document.getElementById("detailView").classList.remove("hidden");
-
-  document.getElementById("detailTitle").innerText = details[option].title;
-  document.getElementById("detailText").innerText = details[option].text;
-
-  document.getElementById("eatOutSection").classList.remove("hidden");
-  document.getElementById("eatOutCheck").checked = false;
-  document.getElementById("eatOutForm").classList.add("hidden");
+function checkAccess() {
+  if (accessInput.value === ACCESS_PASSWORD) {
+    loginView.classList.add("hidden");
+    app.classList.remove("hidden");
+  } else {
+    loginError.innerText = "Esa contraseña no funciona 😌";
+  }
 }
 
-document.getElementById("eatOutCheck").addEventListener("change", () => {
-  document.getElementById("eatOutForm")
-    .classList.toggle("hidden", !eatOutCheck.checked);
+function openDetails(option) {
+  currentOption = option;
+  mainView.classList.add("hidden");
+  detailView.classList.remove("hidden");
+
+  detailTitle.innerText = details[option].title;
+  detailText.innerText = details[option].text;
+
+  eatOutCheck.checked = false;
+  eatOutForm.classList.add("hidden");
+}
+
+eatOutCheck.addEventListener("change", () => {
+  eatOutForm.classList.toggle("hidden", !eatOutCheck.checked);
 });
 
 function confirmSelection() {
@@ -232,16 +261,21 @@ function confirmSelection() {
 
   localStorage.setItem("valentineSelection", JSON.stringify(data));
 
-  document.getElementById("detailView").classList.add("hidden");
-  document.getElementById("finalView").classList.remove("hidden");
+  detailView.classList.add("hidden");
+  finalView.classList.remove("hidden");
 }
 
-function goBack() {
-  document.getElementById("detailView").classList.add("hidden");
-  document.getElementById("mainView").classList.remove("hidden");
+function requestChange() {
+  const pass = prompt("Cambiar selección tiene un costo extra 😉\nIngresa la contraseña:");
+
+  if (pass === CHANGE_PASSWORD) {
+    detailView.classList.add("hidden");
+    mainView.classList.remove("hidden");
+  }
 }
 </script>
 
 </body>
 </html>
+
 
