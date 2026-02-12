@@ -15,11 +15,11 @@ body {
 }
 
 .container {
-  max-width: 820px;
+  max-width: 850px;
   margin: auto;
 }
 
-h1, p {
+h1, h2, p {
   text-align: center;
 }
 
@@ -37,14 +37,15 @@ h1, p {
   border-color: #d6a5bc;
 }
 
-.card.selected {
-  border-color: #b35c86;
-  background: #fff6fb;
+.card-title {
+  font-size: 1.1rem;
+  font-weight: bold;
 }
 
-.checkbox {
-  text-align: center;
-  margin-top: 20px;
+.card-preview {
+  font-size: 0.9rem;
+  margin-top: 6px;
+  color: #666;
 }
 
 button {
@@ -59,31 +60,25 @@ button {
   cursor: pointer;
 }
 
+button.secondary {
+  background: #aaa;
+}
+
 .hidden {
-  display: none !important;
+  display: none;
 }
 
-.modal {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.45);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 999;
-}
-
-.modal-content {
+.detail-box {
   background: white;
-  padding: 25px;
   border-radius: 18px;
-  width: 90%;
-  max-width: 420px;
+  padding: 26px;
+  margin-top: 20px;
 }
 
 label {
   display: block;
   margin-top: 12px;
+  font-size: 0.9rem;
 }
 
 input, select {
@@ -97,131 +92,156 @@ input, select {
 </head>
 
 <body>
-
 <div class="container">
 
 <h1>Choose Our Valentine 💘</h1>
-<p>Al entrar aceptas salir a una cita conmigo 😌</p>
+<p>Al entrar aceptas los términos y condiciones de salir a una cita conmigo 😌</p>
 
-<div id="options">
+<!-- MAIN VIEW -->
+<div id="mainView">
 
-  <div class="card" onclick="selectOption('art', this)">
-    🎨 Manualidad juntos
+  <div class="card" onclick="openDetails('art')">
+    <div class="card-title">🎨 Manualidad juntos</div>
+    <div class="card-preview">Algo creativo, relajado y hecho por los dos</div>
   </div>
 
-  <div class="card" onclick="selectOption('cook', this)">
-    🍝 Cocinar algo que el otro ame
+  <div class="card" onclick="openDetails('cook')">
+    <div class="card-title">🍝 Cocinar algo que el otro AME</div>
+    <div class="card-preview">Aquí no hay devoluciones 😌</div>
   </div>
 
-  <div class="card" onclick="selectOption('firsts', this)">
-    ✨ Primeras veces juntos
+  <div class="card" onclick="openDetails('firsts')">
+    <div class="card-title">✨ Primeras veces juntos</div>
+    <div class="card-preview">Momentos nuevos desbloqueados</div>
   </div>
 
-  <div class="card" onclick="selectOption('country', this)">
-    🌍 Cena de un país
-  </div>
-
-  <div class="checkbox">
-    <input type="checkbox" id="eatOut" autocomplete="off">
-    Prefiero salir a comer (sorpresa por ti)
+  <div class="card" onclick="openDetails('country')">
+    <div class="card-title">🌍 Cena de un país</div>
+    <div class="card-preview">Comida, música y outfit incluidos</div>
   </div>
 
 </div>
 
-<div id="confirmArea" class="hidden">
-  <button onclick="confirmSelection()">Confirmar selección ❤️</button>
+<!-- DETAIL VIEW -->
+<div id="detailView" class="hidden">
+  <div class="detail-box">
+
+    <h2 id="detailTitle"></h2>
+    <p id="detailText"></p>
+
+    <!-- OPCIÓN SALIR A COMER -->
+    <div id="eatOutSection" class="hidden">
+      <label>
+        <input type="checkbox" id="eatOutCheck">
+        Prefiero salir a comer (sorpresa por ti, cero resentimientos)
+      </label>
+
+      <div id="eatOutForm" class="hidden">
+        <label>Tipo de comida</label>
+        <input id="foodType">
+
+        <label>¿Qué prefieres?</label>
+        <select id="priority">
+          <option>Lugar bonito</option>
+          <option>Comida rica</option>
+        </select>
+
+        <label>Vestimenta</label>
+        <select id="dress">
+          <option>Arreglarse</option>
+          <option>Casual</option>
+        </select>
+
+        <label>¿Comida o cena?</label>
+        <select id="time">
+          <option>Comida</option>
+          <option>Cena</option>
+        </select>
+      </div>
+    </div>
+
+    <button onclick="confirmSelection()">Confirmar selección ❤️</button>
+    <button class="secondary" onclick="goBack()">Volver</button>
+
+  </div>
 </div>
 
-<div id="finalMessage" class="hidden">
+<!-- FINAL -->
+<div id="finalView" class="hidden">
   <h2>Selección confirmada 💘</h2>
-  <p>Agregar picante 😉 cuesta muchos besos</p>
+  <p>
+    Si quieres agregar picante 😉 a cualquiera de las opciones<br>
+    el costo es = <b>muchos besos</b>
+  </p>
 </div>
 
-</div>
-
-<!-- MODAL -->
-<div id="eatOutModal" class="modal hidden">
-  <div class="modal-content">
-    <h3>Planear salida 🍽️</h3>
-
-    <label>Tipo de comida</label>
-    <input id="foodType">
-
-    <label>Prioridad</label>
-    <select id="priority">
-      <option>Lugar bonito</option>
-      <option>Comida rica</option>
-    </select>
-
-    <label>Vestimenta</label>
-    <select id="dress">
-      <option>Arreglarse</option>
-      <option>Casual</option>
-    </select>
-
-    <label>¿Comida o cena?</label>
-    <select id="time">
-      <option>Comida</option>
-      <option>Cena</option>
-    </select>
-
-    <button onclick="saveEatOut()">Guardar</button>
-  </div>
 </div>
 
 <script>
-let selectedOption = null;
+let currentOption = null;
 
-document.addEventListener("DOMContentLoaded", () => {
-  const checkbox = document.getElementById("eatOut");
-  const modal = document.getElementById("eatOutModal");
+const details = {
+  art: {
+    title: "🎨 Manualidad juntos",
+    text: "Ir a Fantasías Miguel y escoger una manualidad para hacer los dos: pintar, cerámica o algo random."
+  },
+  cook: {
+    title: "🍝 Cocinar algo que el otro AME",
+    text: "Cada uno elige un platillo que ama y quiere que el otro pruebe. Aquí se prueba sí o sí."
+  },
+  firsts: {
+    title: "✨ Primeras veces juntos",
+    text: "Una lista de cosas que queremos hacer por primera vez como pareja, hoy y en el futuro."
+  },
+  country: {
+    title: "🌍 Cena de un país",
+    text: "Elegimos un país y todo gira alrededor de eso: comida, música y vestimenta."
+  }
+};
 
-  // FORZAR ESTADO LIMPIO
-  checkbox.checked = false;
-  modal.classList.add("hidden");
+function openDetails(option) {
+  currentOption = option;
 
-  // Registrar listener DESPUÉS
-  checkbox.addEventListener("change", () => {
-    if (checkbox.checked) {
-      modal.classList.remove("hidden");
-      selectedOption = "dinner-out";
-      localStorage.setItem("selectedDateOption", "dinner-out");
-    }
-  });
+  document.getElementById("mainView").classList.add("hidden");
+  document.getElementById("detailView").classList.remove("hidden");
+
+  document.getElementById("detailTitle").innerText = details[option].title;
+  document.getElementById("detailText").innerText = details[option].text;
+
+  document.getElementById("eatOutSection").classList.remove("hidden");
+  document.getElementById("eatOutCheck").checked = false;
+  document.getElementById("eatOutForm").classList.add("hidden");
+}
+
+document.getElementById("eatOutCheck").addEventListener("change", () => {
+  document.getElementById("eatOutForm")
+    .classList.toggle("hidden", !eatOutCheck.checked);
 });
 
-function selectOption(option, el) {
-  document.querySelectorAll(".card").forEach(c => c.classList.remove("selected"));
-  el.classList.add("selected");
-
-  selectedOption = option;
-  localStorage.setItem("selectedDateOption", option);
-
-  document.getElementById("confirmArea").classList.remove("hidden");
-}
-
-function saveEatOut() {
-  const details = {
-    foodType: foodType.value,
-    priority: priority.value,
-    dress: dress.value,
-    time: time.value
+function confirmSelection() {
+  const data = {
+    option: currentOption,
+    eatOut: eatOutCheck.checked,
+    details: eatOutCheck.checked ? {
+      foodType: foodType.value,
+      priority: priority.value,
+      dress: dress.value,
+      time: time.value
+    } : null
   };
 
-  localStorage.setItem("dateDetails", JSON.stringify(details));
+  localStorage.setItem("valentineSelection", JSON.stringify(data));
 
-  document.getElementById("eatOutModal").classList.add("hidden");
-  document.getElementById("eatOut").checked = false;
-  document.getElementById("confirmArea").classList.remove("hidden");
+  document.getElementById("detailView").classList.add("hidden");
+  document.getElementById("finalView").classList.remove("hidden");
 }
 
-function confirmSelection() {
-  localStorage.setItem("confirmed", "true");
-  document.getElementById("options").classList.add("hidden");
-  document.getElementById("confirmArea").classList.add("hidden");
-  document.getElementById("finalMessage").classList.remove("hidden");
+function goBack() {
+  document.getElementById("detailView").classList.add("hidden");
+  document.getElementById("mainView").classList.remove("hidden");
 }
 </script>
 
 </body>
 </html>
+
