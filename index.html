@@ -1,333 +1,209 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Choose Our Valentine</title>
+<meta charset="UTF-8">
+<title>Choose Our Valentine 💘</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-:root{
-  --bg:#f7f2f4;
-  --card:#ffffff;
-  --primary:#7b2d43;
-  --accent:#cfa5b5;
-  --text:#2e2e2e;
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: #f6f1f4;
+  margin: 0;
+  padding: 20px;
+  color: #333;
 }
 
-*{
-  box-sizing:border-box;
-  font-family:system-ui,-apple-system,BlinkMacSystemFont;
+h1 {
+  text-align: center;
 }
 
-body{
-  margin:0;
-  background:var(--bg);
-  color:var(--text);
-  min-height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
+.container {
+  max-width: 800px;
+  margin: auto;
 }
 
-.app{
-  width:100%;
-  max-width:420px;
-  padding:24px;
+.card {
+  background: white;
+  border-radius: 14px;
+  padding: 20px;
+  margin-bottom: 15px;
+  cursor: pointer;
+  transition: 0.3s;
+  border: 2px solid transparent;
 }
 
-h1,h2,h3{
-  color:var(--primary);
-  text-align:center;
+.card:hover {
+  border-color: #d8a1b8;
 }
 
-p{
-  text-align:center;
-  line-height:1.4;
+.card.selected {
+  border-color: #b55c87;
+  background: #fff7fb;
 }
 
-button{
-  width:100%;
-  padding:14px;
-  border-radius:14px;
-  border:none;
-  font-size:16px;
-  cursor:pointer;
+button {
+  background: #b55c87;
+  color: white;
+  border: none;
+  padding: 12px 18px;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-top: 15px;
 }
 
-.primary{
-  background:var(--primary);
-  color:white;
+button.secondary {
+  background: #999;
 }
 
-.secondary{
-  background:#eee;
-  margin-top:10px;
+.hidden {
+  display: none;
 }
 
-.card{
-  background:var(--card);
-  border-radius:20px;
-  padding:20px;
-  margin:14px 0;
-  box-shadow:0 10px 25px rgba(0,0,0,.05);
-  cursor:pointer;
-  transition:.25s;
+.checkbox {
+  margin-top: 10px;
 }
 
-.card:hover{transform:scale(1.02);}
-.hidden{display:none !important;}
-
-.detail{
-  margin-top:12px;
-  font-size:15px;
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.checkbox{
-  margin-top:18px;
-  background:#fafafa;
-  padding:14px;
-  border-radius:14px;
-  font-size:14px;
+.modal-content {
+  background: white;
+  padding: 25px;
+  border-radius: 14px;
+  width: 90%;
+  max-width: 400px;
 }
 
-.footer{
-  margin-top:20px;
-  font-size:13px;
-  opacity:.8;
-  text-align:center;
-}
-
-.reset{
-  margin-top:20px;
-  text-align:center;
-  font-size:13px;
-  color:var(--primary);
-  cursor:pointer;
-}
-
-/* MODALS */
-.modal{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.4);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  z-index:10;
-}
-
-.modal-content{
-  background:white;
-  padding:20px;
-  border-radius:16px;
-  width:90%;
-  max-width:300px;
-  text-align:center;
-}
-
-.modal input{
-  width:100%;
-  padding:10px;
-  margin:10px 0;
-  border-radius:10px;
-  border:1px solid #ccc;
+label {
+  display: block;
+  margin-top: 10px;
 }
 </style>
 </head>
 
 <body>
+<div class="container">
 
-<!-- 🔐 ACCESS MODAL (INICIA OCULTO) -->
-<div id="enterModal" class="modal hidden">
-  <div class="modal-content">
-    <h3>Access required 🔒</h3>
-    <input type="password" id="enterPassword" placeholder="Enter password">
-    <button class="primary" onclick="enterSite()">Enter</button>
-  </div>
-</div>
+<h1>Choose Our Valentine 💘</h1>
+<p style="text-align:center">
+By entering you accept the terms & conditions of going on a date with me 😌
+</p>
 
-<div class="app">
-
-<!-- TERMS -->
-<div id="terms">
-  <h1>Choose Our Valentine 💘</h1>
-  <p>
-    Al entrar aceptas los <b>términos y condiciones</b><br>
-    de salir a una cita conmigo.
-  </p>
-  <p>
-    Esto incluye reírte un poco,<br>
-    tomar decisiones importantes<br>
-    y pasarla bien conmigo.
-  </p>
-  <button class="primary" onclick="start()">Acepto</button>
-  <button class="secondary" onclick="nope()">No acepto</button>
-</div>
-
-<!-- OPTIONS -->
-<div id="options" class="hidden">
-  <h2>Choose wisely</h2>
-  <p>Cuatro caminos. Un solo 14 de febrero.</p>
-
-  <div class="card" onclick="selectOption(1)">
-    🖌️ <b>Create Mode</b><br>
-    <i>Something we make. Something we keep.</i>
+<div id="options">
+  <div class="card" onclick="selectOption('art')">
+    🎨 Manualidad juntos
   </div>
 
-  <div class="card" onclick="selectOption(2)">
-    🍳 <b>No Turning Back</b><br>
-    <i>If I love it… you have to try it.</i>
+  <div class="card" onclick="selectOption('cook')">
+    🍝 Cocinar algo que el otro AME
   </div>
 
-  <div class="card" onclick="selectOption(3)">
-    📜 <b>First Times</b><br>
-    <i>Not everything is for today.</i>
+  <div class="card" onclick="selectOption('firsts')">
+    ✨ Primeras veces juntos
   </div>
 
-  <div class="card" onclick="selectOption(4)">
-    🌍 <b>Passport Date</b><br>
-    <i>One night. One country.</i>
+  <div class="card" onclick="selectOption('country')">
+    🌍 Cena de un país (vestimenta incluida)
   </div>
-</div>
-
-<!-- RESULT -->
-<div id="result" class="hidden">
-  <h2>Decision locked 🔒</h2>
-  <p>Your Valentine’s date has been selected.</p>
-
-  <div id="details" class="detail"></div>
 
   <div class="checkbox">
-    <label>
-      <input type="checkbox">
-      Prefiero salir a comer<br>
-      <small>
-        El lugar será escogido por mí, de forma sorpresa.<br>
-        <i>No habrá resentimientos.</i>
-      </small>
-    </label>
+    <input type="checkbox" id="eatOut" onchange="openEatOut()">
+    Prefiero salir a comer (sorpresa por ti, cero resentimientos)
   </div>
+</div>
 
-  <div class="footer">
-    Si quieres agregar un poco de <b>picante 😉</b><br>
-    a cualquiera de las opciones…<br><br>
-    <b>Costo adicional:</b><br>
-    = Muchos besos 💋
-  </div>
+<div id="confirmArea" class="hidden">
+  <h3>¿Confirmamos esta elección? ❤️</h3>
+  <button onclick="confirmSelection()">Confirmar selección</button>
+</div>
 
-  <div class="reset" onclick="askReset()">¿Cambiar decisión?</div>
+<div id="finalMessage" class="hidden">
+  <h2>Selección confirmada 💘</h2>
+  <p>
+    Si quieres agregar picante 😉 a cualquier opción<br>
+    el costo es = <b>muchos besos</b>
+  </p>
 </div>
 
 </div>
 
-<!-- 🔁 RESET MODAL -->
-<div id="resetModal" class="modal hidden">
+<!-- MODAL SALIR A COMER -->
+<div id="eatOutModal" class="modal hidden">
   <div class="modal-content">
-    <h3>Authorization required</h3>
-    <input type="password" id="resetPassword" placeholder="Reset password">
-    <button class="primary" onclick="resetChoice()">Confirm</button>
+    <h3>Planear salida 🍽️</h3>
+
+    <label>Tipo de comida</label>
+    <input id="foodType" placeholder="Ej. Italiana">
+
+    <label>Prioridad</label>
+    <select id="priority">
+      <option>Lugar bonito</option>
+      <option>Comida rica</option>
+    </select>
+
+    <label>Arreglarse o casual</label>
+    <select id="dress">
+      <option>Arreglarse</option>
+      <option>Casual</option>
+    </select>
+
+    <label>¿Comida o cena?</label>
+    <select id="time">
+      <option>Comida</option>
+      <option>Cena</option>
+    </select>
+
+    <button onclick="saveEatOut()">Guardar</button>
   </div>
 </div>
 
 <script>
-const ENTER_PASSWORD = "LOVE2026";
-const RESET_PASSWORD = "VALENTINE2026";
+let selectedOption = null;
 
-let choice = localStorage.getItem("choice");
+function selectOption(option){
+  document.querySelectorAll('.card').forEach(c => c.classList.remove('selected'));
+  event.currentTarget.classList.add('selected');
+  selectedOption = option;
 
-/* 🔐 ACCESS CONTROL */
-if(!sessionStorage.getItem("accessGranted")){
-  document.getElementById("enterModal").classList.remove("hidden");
-} else {
-  if(choice) showResult(choice);
+  localStorage.setItem("selectedDateOption", option);
+  document.getElementById("confirmArea").classList.remove("hidden");
 }
 
-function enterSite(){
-  const pass = document.getElementById("enterPassword").value;
-  if(pass === ENTER_PASSWORD){
-    sessionStorage.setItem("accessGranted","true");
-    document.getElementById("enterModal").classList.add("hidden");
-    if(choice) showResult(choice);
-  } else {
-    alert("❌ Incorrect password");
+function openEatOut(){
+  if(document.getElementById("eatOut").checked){
+    document.getElementById("eatOutModal").classList.remove("hidden");
   }
 }
 
-/* GAME FLOW */
-function start(){
-  document.getElementById("terms").classList.add("hidden");
-  document.getElementById("options").classList.remove("hidden");
+function saveEatOut(){
+  const details = {
+    foodType: foodType.value,
+    priority: priority.value,
+    dressCode: dress.value,
+    time: time.value
+  };
+
+  localStorage.setItem("selectedDateOption", "dinner-out");
+  localStorage.setItem("dateDetails", JSON.stringify(details));
+
+  document.getElementById("eatOutModal").classList.add("hidden");
+  document.getElementById("confirmArea").classList.remove("hidden");
 }
 
-function nope(){
-  alert("❌ Esta opción no funciona. Intenta de nuevo 😌");
-}
-
-function selectOption(n){
-  localStorage.setItem("choice", n);
-  showResult(n);
-}
-
-function showResult(n){
-  document.getElementById("terms").classList.add("hidden");
+function confirmSelection(){
+  localStorage.setItem("confirmed", "true");
   document.getElementById("options").classList.add("hidden");
-  document.getElementById("result").classList.remove("hidden");
-
-  const d = document.getElementById("details");
-  if(n==1){
-    d.innerHTML = `
-      Vamos juntos a <b>Fantasías Miguel</b>.<br>
-      Elegimos <b>una sola manualidad</b> y la hacemos los dos.<br><br>
-      No tiene que quedar bonita.<br>
-      Tiene que ser nuestra.
-    `;
-  }
-  if(n==2){
-    d.innerHTML = `
-      Cada uno elige <b>un platillo que ama</b><br>
-      y que quiere que el otro pruebe.<br><br>
-      No hay quejas anticipadas.<br>
-      Postre obligatorio.<br><br>
-      Trust exercise level: relationship.
-    `;
-  }
-  if(n==3){
-    d.innerHTML = `
-      Una lista de <b>primeras veces</b><br>
-      de cosas que queramos hacer juntos.<br><br>
-      Elegimos las que se puedan hacer hoy<br>
-      y el resto quedan para futuras citas 😉
-    `;
-  }
-  if(n==4){
-    d.innerHTML = `
-      Elegimos <b>un país</b>.<br>
-      Cena típica, vestimenta incluida<br>
-      y música acorde.<br><br>
-      Travel without jet lag.
-    `;
-  }
-}
-
-/* RESET */
-function askReset(){
-  document.getElementById("resetModal").classList.remove("hidden");
-}
-
-function resetChoice(){
-  const pass = document.getElementById("resetPassword").value;
-  if(pass === RESET_PASSWORD){
-    localStorage.removeItem("choice");
-    document.getElementById("resetModal").classList.add("hidden");
-    document.getElementById("result").classList.add("hidden");
-    document.getElementById("options").classList.remove("hidden");
-  } else {
-    alert("❌ Nice try. Decision stays locked 😌");
-  }
+  document.getElementById("confirmArea").classList.add("hidden");
+  document.getElementById("finalMessage").classList.remove("hidden");
 }
 </script>
 
 </body>
 </html>
-
-
