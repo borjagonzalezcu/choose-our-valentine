@@ -245,16 +245,12 @@ function checkAccess() {
   }
 }
   
-function showOneTimeWarning() {
-  if (localStorage.getItem("valentineWarningShown")) return;
-
+function showAccessWarning() {
   alert(
     "⚠️ Ojo 👀\n\n" +
     "Solo podrás seleccionar UNA opción de la lista y no podrás volver atrás.\n\n" +
     "En caso extremo, contáctame directamente 😌"
   );
-
-  localStorage.setItem("valentineWarningShown", "true");
 }
   
 function loadState() {
@@ -352,6 +348,7 @@ function unlock() {
 
 </body>
 </html>
+
 
 
 
