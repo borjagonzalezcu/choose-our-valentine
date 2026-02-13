@@ -35,6 +35,19 @@ body {
   border-radius: 22px;
   box-shadow: 0 12px 30px rgba(0,0,0,0.18);
 }
+  .pre-login-photo {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.pre-login-photo img {
+  max-width: 90%;
+  width: 320px;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  object-fit: cover;
+}
 .container {
   max-width: 850px;
   margin: auto;
@@ -142,7 +155,9 @@ input, select {
 </head>
 
 <body>
-
+<div class="pre-login-photo">
+  <img src="foto-final.jpeg" alt="Bienvenida 💘">
+</div>
 <!-- LOGIN -->
 <div id="loginView" class="password-box">
   <h2>🔒 Acceso restringido</h2>
@@ -384,6 +399,7 @@ function unlock() {
 
 </body>
 </html>
+
 
 
 
