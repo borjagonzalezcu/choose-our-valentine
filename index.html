@@ -239,7 +239,7 @@ function checkAccess() {
     loginView.classList.add("hidden");
     app.classList.remove("hidden");
     loadState();
-    showOneTimeWarning();
+    showAccessWarning();
   } else {
     loginError.innerText = "Esa contraseña no funciona 😌";
   }
@@ -348,6 +348,7 @@ function unlock() {
 
 </body>
 </html>
+
 
 
 
