@@ -13,7 +13,20 @@ body {
   padding: 20px;
   color: #333;
 }
+.photo-strip {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  margin: 20px 0 30px;
+}
 
+.photo-strip img {
+  width: 105px;
+  height: 145px;
+  object-fit: cover;
+  border-radius: 16px;
+  box-shadow: 0 10px 22px rgba(0,0,0,0.14);
+}
 .container {
   max-width: 850px;
   margin: auto;
@@ -131,6 +144,11 @@ input, select {
 </div>
 
 <div class="container hidden" id="app">
+<div class="photo-strip">
+  <img src="foto-playa-selfie.jpg" alt="Nosotros">
+  <img src="foto-cena.jpg" alt="Date night">
+  <img src="foto-formal.jpg" alt="Juntos">
+</div>
 
 <h1>Choose Our Valentine 💘</h1>
 <p>Al entrar aceptas los términos y condiciones de salir a una con el mejor novio del mundo Borja 😌</p>
@@ -358,6 +376,7 @@ function unlock() {
 
 </body>
 </html>
+
 
 
 
