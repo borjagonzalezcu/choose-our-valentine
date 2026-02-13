@@ -66,7 +66,15 @@ button.secondary {
 .hidden {
   display: none;
 }
-
+  
+.centered-label {
+  text-align: center;
+  display: block;
+}
+.centered-label input {
+  display: block;
+  margin: 0 auto 10px;
+}  
 .detail-box {
   background: white;
   border-radius: 18px;
@@ -159,12 +167,11 @@ input, select {
     <h2 id="detailTitle"></h2>
     <p id="detailText"></p>
 
-    <label>
-      text-align: center;
+     <label class="centered-label">
       <input type="checkbox" id="eatOutCheck">
-      Prefiero salir a comer "Dame una pista ❤️ Sin resentimientos" <br>
-      Marca la casilla si no te gustó esta opción y prefieres salir a comer <br>
-      <b> Solo puedes seleccionar una opción </b>
+      Prefiero salir a comer "Dame una pista ❤️ Sin resentimientos"<br>
+      Marca la casilla si no te gustó esta opción y prefieres salir a comer<br>
+      <b>Solo puedes seleccionar una opción</b>
     </label>
 
     <div id="eatOutForm" class="hidden">
@@ -351,6 +358,7 @@ function unlock() {
 
 </body>
 </html>
+
 
 
 
