@@ -30,7 +30,6 @@ h1, h2, p {
   margin-bottom: 16px;
   cursor: pointer;
   border: 2px solid transparent;
-  transition: 0.3s;
 }
 
 .card:hover {
@@ -97,15 +96,27 @@ input, select {
   border-radius: 18px;
   text-align: center;
 }
+
+.summary-box {
+  background: white;
+  border-radius: 18px;
+  padding: 26px;
+  margin-top: 25px;
+}
+
+.history {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 15px;
+}
 </style>
 </head>
 
 <body>
 
-<!-- PASSWORD GATE -->
+<!-- LOGIN -->
 <div id="loginView" class="password-box">
   <h2>🔒 Acceso restringido</h2>
-  <p>Ingresa la contraseña para continuar</p>
   <input type="password" id="accessInput" placeholder="Contraseña">
   <button onclick="checkAccess()">Entrar</button>
   <p id="loginError" style="color:#b35c86;"></p>
@@ -116,7 +127,7 @@ input, select {
 <h1>Choose Our Valentine 💘</h1>
 <p>Al entrar aceptas los términos y condiciones de salir a una cita conmigo 😌</p>
 
-<!-- MAIN VIEW -->
+<!-- MAIN -->
 <div id="mainView">
 
   <div class="card" onclick="openDetails('art')">
@@ -141,58 +152,62 @@ input, select {
 
 </div>
 
-<!-- DETAIL VIEW -->
+<!-- DETAIL -->
 <div id="detailView" class="hidden">
   <div class="detail-box">
 
     <h2 id="detailTitle"></h2>
     <p id="detailText"></p>
 
-    <div id="eatOutSection">
-      <label>
-        <input type="checkbox" id="eatOutCheck">
-        Prefiero salir a comer (sorpresa por ti, cero resentimientos)
-      </label>
+    <label>
+      <input type="checkbox" id="eatOutCheck">
+      Prefiero salir a comer (sorpresa por ti)
+    </label>
 
-      <div id="eatOutForm" class="hidden">
-        <label>Tipo de comida</label>
-        <input id="foodType">
+    <div id="eatOutForm" class="hidden">
+      <label>Tipo de comida</label>
+      <input id="foodType">
 
-        <label>¿Qué prefieres?</label>
-        <select id="priority">
-          <option>Lugar bonito</option>
-          <option>Comida rica</option>
-        </select>
+      <label>Prioridad</label>
+      <select id="priority">
+        <option>Lugar bonito</option>
+        <option>Comida rica</option>
+      </select>
 
-        <label>Vestimenta</label>
-        <select id="dress">
-          <option>Arreglarse</option>
-          <option>Casual</option>
-        </select>
+      <label>Vestimenta</label>
+      <select id="dress">
+        <option>Arreglarse</option>
+        <option>Casual</option>
+      </select>
 
-        <label>¿Comida o cena?</label>
-        <select id="time">
-          <option>Comida</option>
-          <option>Cena</option>
-        </select>
-      </div>
+      <label>¿Comida o cena?</label>
+      <select id="time">
+        <option>Comida</option>
+        <option>Cena</option>
+      </select>
     </div>
 
     <button onclick="confirmSelection()">Confirmar selección ❤️</button>
-    <button class="secondary" onclick="requestChange()">
-      Cambiar selección (tendrá un costo extra 😉)
-    </button>
+    <button class="secondary" onclick="requestChange()">Cambiar selección (costo extra 😉)</button>
 
   </div>
 </div>
 
 <!-- FINAL -->
 <div id="finalView" class="hidden">
-  <h2>Selección confirmada 💘</h2>
-  <p>
-    Si quieres agregar picante 😉 a cualquiera de las opciones<br>
-    el costo es = <b>muchos besos</b>
-  </p>
+  <div class="summary-box">
+    <h2>Selección confirmada 💘</h2>
+    <p id="summaryText"></p>
+
+    <p>
+      Si quieres agregar picante 😉<br>
+      el costo es = <b>muchos besos</b>
+    </p>
+
+    <div id="history" class="history"></div>
+
+    <button class="secondary" onclick="unlock()">Desbloquear (solo admin)</button>
+  </div>
 </div>
 
 </div>
@@ -200,34 +215,38 @@ input, select {
 <script>
 const ACCESS_PASSWORD = "valentine2024";
 const CHANGE_PASSWORD = "besos";
+const UNLOCK_PASSWORD = "reset";
 
 let currentOption = null;
 
-const details = {
-  art: {
-    title: "🎨 Manualidad juntos",
-    text: "Ir a Fantasías Miguel y escoger una manualidad para hacer los dos."
-  },
-  cook: {
-    title: "🍝 Cocinar algo que el otro AME",
-    text: "Cada uno elige un platillo que ama y quiere que el otro pruebe."
-  },
-  firsts: {
-    title: "✨ Primeras veces juntos",
-    text: "Lista de cosas que queremos hacer por primera vez como pareja."
-  },
-  country: {
-    title: "🌍 Cena de un país",
-    text: "Comida, vestimenta y música del país elegido."
-  }
+const detailsMap = {
+  art: "🎨 Manualidad juntos",
+  cook: "🍝 Cocinar algo que el otro AME",
+  firsts: "✨ Primeras veces juntos",
+  country: "🌍 Cena de un país"
+};
+
+const detailsText = {
+  art: "Ir a Fantasías Miguel y hacer una manualidad juntos.",
+  cook: "Cada uno cocina algo que ama y el otro lo prueba sí o sí.",
+  firsts: "Lista de primeras veces como pareja.",
+  country: "Cena temática con país, música y vestimenta."
 };
 
 function checkAccess() {
   if (accessInput.value === ACCESS_PASSWORD) {
     loginView.classList.add("hidden");
     app.classList.remove("hidden");
+    loadState();
   } else {
     loginError.innerText = "Esa contraseña no funciona 😌";
+  }
+}
+
+function loadState() {
+  const saved = localStorage.getItem("valentineFinal");
+  if (saved) {
+    showFinal(JSON.parse(saved));
   }
 }
 
@@ -235,10 +254,8 @@ function openDetails(option) {
   currentOption = option;
   mainView.classList.add("hidden");
   detailView.classList.remove("hidden");
-
-  detailTitle.innerText = details[option].title;
-  detailText.innerText = details[option].text;
-
+  detailTitle.innerText = detailsMap[option];
+  detailText.innerText = detailsText[option];
   eatOutCheck.checked = false;
   eatOutForm.classList.add("hidden");
 }
@@ -256,20 +273,54 @@ function confirmSelection() {
       priority: priority.value,
       dress: dress.value,
       time: time.value
-    } : null
+    } : null,
+    date: new Date().toLocaleString()
   };
 
-  localStorage.setItem("valentineSelection", JSON.stringify(data));
+  const history = JSON.parse(localStorage.getItem("valentineHistory") || "[]");
+  history.push(data);
+  localStorage.setItem("valentineHistory", JSON.stringify(history));
+  localStorage.setItem("valentineFinal", JSON.stringify(data));
 
+  showFinal(data);
+}
+
+function showFinal(data) {
   detailView.classList.add("hidden");
+  mainView.classList.add("hidden");
   finalView.classList.remove("hidden");
+
+  let text = `<b>${detailsMap[data.option]}</b><br>${detailsText[data.option]}`;
+
+  if (data.eatOut) {
+    text += `<br><br>🍽️ Salir a comer:
+      ${data.details.foodType},
+      ${data.details.priority},
+      ${data.details.dress},
+      ${data.details.time}`;
+  }
+
+  summaryText.innerHTML = text;
+
+  const history = JSON.parse(localStorage.getItem("valentineHistory") || "[]");
+  historyDiv.innerHTML = history.length > 1
+    ? "Historial de decisiones 💭<br>" + history.map(h => `• ${detailsMap[h.option]}`).join("<br>")
+    : "";
 }
 
 function requestChange() {
-  const pass = prompt("Cambiar selección tiene un costo extra 😉\nIngresa la contraseña:");
-
+  const pass = prompt("Cambiar selección tiene un costo extra 😉");
   if (pass === CHANGE_PASSWORD) {
     detailView.classList.add("hidden");
+    mainView.classList.remove("hidden");
+  }
+}
+
+function unlock() {
+  const pass = prompt("Contraseña admin:");
+  if (pass === UNLOCK_PASSWORD) {
+    localStorage.removeItem("valentineFinal");
+    finalView.classList.add("hidden");
     mainView.classList.remove("hidden");
   }
 }
@@ -277,5 +328,6 @@ function requestChange() {
 
 </body>
 </html>
+
 
 
