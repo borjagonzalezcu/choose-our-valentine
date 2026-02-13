@@ -136,8 +136,8 @@ input, select {
   </div>
 
   <div class="card" onclick="openDetails('cook')">
-    <div class="card-title">🍝 Cocinar algo que el otro AME</div>
-    <div class="card-preview">Aquí no hay devoluciones 😌</div>
+    <div class="card-title">🍝 Concina Especial</div>
+    <div class="card-preview">Lo que se cocina se come si o si</div>
   </div>
 
   <div class="card" onclick="openDetails('firsts')">
@@ -161,7 +161,7 @@ input, select {
 
     <label>
       <input type="checkbox" id="eatOutCheck">
-      Prefiero salir a comer (Dame una pista ❤️ Sin resentimientos)
+      Prefiero salir a comer (Dame una pista ❤️ Sin resentimientos, marca la casilla)
     </label>
 
     <div id="eatOutForm" class="hidden">
@@ -228,10 +228,10 @@ const detailsMap = {
 };
 
 const detailsText = {
-  art: "Ir a Fantasías Miguel y hacer una manualidad juntos.",
-  cook: "Vamos a comprar las cosas, cocinamos entre los dos algo que amamos.",
-  firsts: "Lista de primeras veces como pareja.",
-  country: "Cena temática con país, música y vestimenta."
+  art: "Ir a Fantasías Miguel, comprar las cosas y hacer una manualidad juntos.",
+  cook: "Vamos a comprar las cosas, cocinamos entre los dos algo que amamos y el otro tiene que probarla si o si.",
+  firsts: "Lista de primeras veces como pareja. Las que podamos las hacemos hoy, las demás para futuras citas.",
+  country: "Cena temática de un país con música y vestimenta de ese país."
 };
 
 function checkAccess() {
@@ -348,6 +348,7 @@ function unlock() {
 
 </body>
 </html>
+
 
 
 
