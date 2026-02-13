@@ -239,11 +239,24 @@ function checkAccess() {
     loginView.classList.add("hidden");
     app.classList.remove("hidden");
     loadState();
+    showOneTimeWarning();
   } else {
     loginError.innerText = "Esa contraseña no funciona 😌";
   }
 }
+  
+function showOneTimeWarning() {
+  if (localStorage.getItem("valentineWarningShown")) return;
 
+  alert(
+    "⚠️ Ojo 👀\n\n" +
+    "Solo podrás seleccionar UNA opción de la lista y no podrás volver atrás.\n\n" +
+    "En caso extremo, contáctame directamente 😌"
+  );
+
+  localStorage.setItem("valentineWarningShown", "true");
+}
+  
 function loadState() {
   const saved = localStorage.getItem("valentineFinal");
   if (saved) {
@@ -339,6 +352,7 @@ function unlock() {
 
 </body>
 </html>
+
 
 
 
