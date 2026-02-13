@@ -227,10 +227,10 @@ const detailsMap = {
 };
 
 const detailsText = {
-  art: "Ir a Fantasías Miguel y hacer una manualidad juntos. EJ: Pintar, collage, dibujar, etc...",
-  cook: "Vamos a comprar las cosas, cocinamos entre los dos algo que amamos y el otro lo prueba sí o sí.",
-  firsts: "Lista de primeras veces como pareja. Las que se puedan hacer hoy la shacemos, las que no quedan para futuras citas.",
-  country: "Cena temática con país, música y vestimenta de ese país."
+  art: "Ir a Fantasías Miguel y hacer una manualidad juntos.",
+  cook: "Vamos a comprar las cosas, cocinamos entre los dos algo que amamos.",
+  firsts: "Lista de primeras veces como pareja.",
+  country: "Cena temática con país, música y vestimenta."
 };
 
 function checkAccess() {
@@ -261,7 +261,12 @@ function openDetails(option) {
 }
 
 eatOutCheck.addEventListener("change", () => {
-  eatOutForm.classList.toggle("hidden", !eatOutCheck.checked);
+  if (eatOutCheck.checked) {
+    currentOption = null; // 🔴 se anula la tarjeta
+    eatOutForm.classList.remove("hidden");
+  } else {
+    eatOutForm.classList.add("hidden");
+  }
 });
 
 function confirmSelection() {
@@ -290,22 +295,21 @@ function showFinal(data) {
   mainView.classList.add("hidden");
   finalView.classList.remove("hidden");
 
-  let text = `<b>${detailsMap[data.option]}</b><br>${detailsText[data.option]}`;
+  let text = "";
 
   if (data.eatOut) {
-    text += `<br><br>🍽️ Salir a comer:
-      ${data.details.foodType},
-      ${data.details.priority},
-      ${data.details.dress},
-      ${data.details.time}`;
+    text = `
+      🍽️ <b>Salida a comer</b><br><br>
+      Tipo de comida: ${data.details.foodType}<br>
+      Prioridad: ${data.details.priority}<br>
+      Vestimenta: ${data.details.dress}<br>
+      Momento: ${data.details.time}
+    `;
+  } else {
+    text = `<b>${detailsMap[data.option]}</b><br>${detailsText[data.option]}`;
   }
 
   summaryText.innerHTML = text;
-
-  const history = JSON.parse(localStorage.getItem("valentineHistory") || "[]");
-  historyDiv.innerHTML = history.length > 1
-    ? "Historial de decisiones 💭<br>" + history.map(h => `• ${detailsMap[h.option]}`).join("<br>")
-    : "";
 }
 
 function requestChange() {
@@ -328,6 +332,7 @@ function unlock() {
 
 </body>
 </html>
+
 
 
 
